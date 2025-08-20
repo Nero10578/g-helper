@@ -29,18 +29,16 @@ namespace GHelper
         NvidiaGpuControl? nvControl = null;
         ModeControl modeControl = Program.modeControl;
 
-        FanSensorControl fanSensorControl;
-
+        FanSensorControl fanSensorControl = Program.fanControl;
+ 
         static int gpuPowerBase = 0;
         static bool isGPUPower => gpuPowerBase > 0;
-
+ 
         public Fans()
         {
-
+ 
             InitializeComponent();
-
-            fanSensorControl = new FanSensorControl(this);
-
+ 
             //float dpi = ControlHelper.GetDpiScale(this).Value;
             //comboModes.Size = new Size(comboModes.Width, (int)dpi * 18);
             comboModes.ClientSize = new Size(comboModes.Width, comboModes.Height - 4);
@@ -258,9 +256,9 @@ namespace GHelper
         private void ButtonCalibrate_Click(object? sender, EventArgs e)
         {
             buttonCalibrate.Enabled = false;
-            fanSensorControl.StartCalibration();
+            fanSensorControl.StartCalibration(this);
         }
-
+ 
         private void ChartCPU_MouseClick(object? sender, MouseEventArgs e)
         {
             if (sender is null) return;

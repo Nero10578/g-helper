@@ -115,8 +115,8 @@ public class Startup
 
             td.RegistrationInfo.Description = "G-Helper Auto Start";
             td.Triggers.Add(new LogonTrigger { UserId = WindowsIdentity.GetCurrent().Name, Delay = TimeSpan.FromSeconds(2) });
-            td.Actions.Add(strExeFilePath);
-
+            td.Actions.Add(strExeFilePath, "minimized");
+ 
             if (ProcessHelper.IsUserAdministrator())
                 td.Principal.RunLevel = TaskRunLevel.Highest;
 

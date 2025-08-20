@@ -13,27 +13,26 @@ namespace GHelper.Fan
 
         const int FAN_COUNT = 3;
 
-        Fans fansForm;
+        Fans? fansForm;
         ModeControl modeControl = Program.modeControl;
-
+ 
         static int[] measuredMax;
         static int sameCount = 0;
-
+ 
         static System.Timers.Timer timer = default!;
         static System.Timers.Timer linkedTimer = default!;
-
+ 
         static int[] _fanMax = InitFanMax();
         static bool _fanRpm = AppConfig.IsNotFalse("fan_rpm");
-
-        public FanSensorControl(Fans fansForm)
+ 
+        public FanSensorControl()
         {
-            this.fansForm = fansForm;
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += Timer_Elapsed;
-
+ 
             linkedTimer = new System.Timers.Timer(3000);
             linkedTimer.Elapsed += LinkedTimer_Elapsed;
-
+ 
         }
 
         public void SetFanControl(bool linked)
@@ -157,20 +156,20 @@ namespace GHelper.Fan
                 return Properties.Strings.FanSpeed + ": " + Math.Min(Math.Round((float)value / GetFanMax(device) * 100), 100).ToString() + "%"; // relatively to max RPM
         }
 
-        public void StartCalibration()
+        public void StartCalibration(Fans fansForm)
         {
-
+            this.fansForm = fansForm;
             measuredMax = new int[] { 0, 0, 0 };
             timer.Enabled = true;
-
+ 
             for (int i = 0; i < FAN_COUNT; i++)
                 AppConfig.Remove("fan_max_" + i);
-
+ 
             Program.acpi.DeviceSet(AsusACPI.PerformanceMode, AsusACPI.PerformanceTurbo, "ModeCalibration");
-
+ 
             for (int i = 0; i < FAN_COUNT; i++)
                 Program.acpi.SetFanCurve((AsusFan)i, new byte[] { 20, 30, 40, 50, 60, 70, 80, 90, 100, 100, 100, 100, 100, 100, 100, 100 });
-
+ 
         }
 
         private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
@@ -195,8 +194,8 @@ namespace GHelper.Fan
             if (measuredMax[(int)AsusFan.Mid] > 10) label = label + ", Mid: " + measuredMax[(int)AsusFan.Mid] * 100;
             label = label + " (" + sameCount + "s)";
 
-            fansForm.LabelFansResult(label);
-
+            if (fansForm is not null) fansForm.LabelFansResult(label);
+ 
             if (sameCount >= 15)
             {
                 for (int i = 0; i < FAN_COUNT; i++)
@@ -224,8 +223,11 @@ namespace GHelper.Fan
             if (AppConfig.Get("fan_max_" + (int)AsusFan.Mid) > 0)
                 label = label + ", Mid: " + AppConfig.Get("fan_max_" + (int)AsusFan.Mid) * 100;
 
-            fansForm.LabelFansResult(label);
-            fansForm.InitAxis();
+            if (fansForm is not null)
+            {
+                fansForm.LabelFansResult(label);
+                fansForm.InitAxis();
+            }
         }
     }
 }

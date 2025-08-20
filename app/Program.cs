@@ -1,6 +1,7 @@
 using GHelper.Ally;
 using GHelper.Battery;
 using GHelper.Display;
+using GHelper.Fan;
 using GHelper.Gpu;
 using GHelper.Helpers;
 using GHelper.Input;
@@ -25,6 +26,7 @@ namespace GHelper
         public static SettingsForm settingsForm = new SettingsForm();
 
         public static ModeControl modeControl = new ModeControl();
+        public static FanSensorControl fanControl = new FanSensorControl();
         public static GPUModeControl gpuControl = new GPUModeControl(settingsForm);
         public static AllyControl allyControl = new AllyControl(settingsForm);
         public static ClamshellModeControl clamshellControl = new ClamshellModeControl();
@@ -114,7 +116,7 @@ namespace GHelper
 
             settingsForm.InitAura();
             settingsForm.InitMatrix();
-
+ 
             gpuControl.InitXGM();
 
             SetAutoModes(init: true);
@@ -139,7 +141,7 @@ namespace GHelper
 
             if (Environment.CurrentDirectory.Trim('\\') == Application.StartupPath.Trim('\\') || action.Length > 0)
             {
-                SettingsToggle(false);
+                SettingsToggle(action != "minimized");
             }
 
             switch (action)
@@ -257,6 +259,8 @@ namespace GHelper
             inputDispatcher.Init();
 
             modeControl.AutoPerformance(powerChanged);
+            settingsForm.InitFans();
+            fanControl.SetFanControl(AppConfig.IsMode("link_fans"));
 
             settingsForm.matrixControl.SetDevice(true);
             InputDispatcher.InitStatusLed();
@@ -307,13 +311,19 @@ namespace GHelper
             SetAutoModes(true);
         }
 
-        public static void SettingsToggle(bool checkForFocus = true, bool trayClick = false)
+        public static void SettingsToggle(bool open = true, bool trayClick = false)
         {
+            if (!open)
+            {
+                settingsForm.HideAll();
+                return;
+            }
+
             if (settingsForm.Visible)
             {
                 // If helper window is not on top, this just focuses on the app again
                 // Pressing the ghelper button again will hide the app
-                if (checkForFocus && !settingsForm.HasAnyFocus(trayClick) && !AppConfig.Is("topmost"))
+                if (!settingsForm.HasAnyFocus(trayClick) && !AppConfig.Is("topmost"))
                 {
                     settingsForm.ShowAll();
                 }
@@ -326,21 +336,21 @@ namespace GHelper
             {
                 var screen = Screen.PrimaryScreen;
                 if (screen is null) screen = Screen.FromControl(settingsForm);
-
+ 
                 settingsForm.Location = screen.WorkingArea.Location;
                 settingsForm.Left = screen.WorkingArea.Width - 10 - settingsForm.Width;
                 settingsForm.Top = screen.WorkingArea.Height - 10 - settingsForm.Height;
-
+ 
                 settingsForm.Show();
                 settingsForm.ShowAll();
-
+ 
                 settingsForm.Left = screen.WorkingArea.Width - 10 - settingsForm.Width;
-
+ 
                 if (AppConfig.IsAlly())
                     settingsForm.Top = Math.Max(10, screen.Bounds.Height - 110 - settingsForm.Height);
                 else
                     settingsForm.Top = screen.WorkingArea.Height - 10 - settingsForm.Height;
-
+ 
                 settingsForm.VisualiseGPUMode();
             }
         }

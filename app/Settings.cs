@@ -1052,7 +1052,7 @@ namespace GHelper
                 fansForm = new Fans();
                 AddOwnedForm(fansForm);
             }
-
+ 
             if (fansForm.Visible)
             {
                 fansForm.Close();
@@ -1063,7 +1063,7 @@ namespace GHelper
                 fansForm.Show();
                 fansForm.ToggleNavigation(index);
             }
-
+ 
         }
 
         private void ButtonFans_Click(object? sender, EventArgs e)
@@ -1675,6 +1675,12 @@ namespace GHelper
 
                 labelGPU.Text = text;
             });
+        }
+
+        public void InitFans()
+        {
+            if (fansForm is not null)
+                fansForm.InitFans();
         }
 
         public void VisualiseGPUMode(int GPUMode = -1)
