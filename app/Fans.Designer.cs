@@ -56,6 +56,8 @@ namespace GHelper
             picturePerf = new PictureBox();
             labelFans = new Label();
             panelApplyFans = new Panel();
+            tableLayoutApply = new TableLayoutPanel();
+            checkLinkFans = new RCheckBox();
             buttonCalibrate = new RButton();
             labelFansResult = new Label();
             checkApplyFans = new RCheckBox();
@@ -162,6 +164,7 @@ namespace GHelper
             tableLayoutModes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picturePerf).BeginInit();
             panelApplyFans.SuspendLayout();
+            tableLayoutApply.SuspendLayout();
             panelSliders.SuspendLayout();
             panelAdvanced.SuspendLayout();
             panelAdvancedAlways.SuspendLayout();
@@ -445,40 +448,72 @@ namespace GHelper
             labelFans.Size = new Size(90, 32);
             labelFans.TabIndex = 40;
             labelFans.Text = "Profile";
-            // 
+            //
             // panelApplyFans
-            // 
-            panelApplyFans.Controls.Add(buttonCalibrate);
+            //
+            panelApplyFans.Controls.Add(tableLayoutApply);
             panelApplyFans.Controls.Add(labelFansResult);
-            panelApplyFans.Controls.Add(checkApplyFans);
-            panelApplyFans.Controls.Add(buttonReset);
             panelApplyFans.Dock = DockStyle.Bottom;
             panelApplyFans.Location = new Point(0, 984);
             panelApplyFans.Margin = new Padding(4);
             panelApplyFans.Name = "panelApplyFans";
             panelApplyFans.Size = new Size(810, 116);
             panelApplyFans.TabIndex = 43;
-            // 
+            //
+            // tableLayoutApply
+            //
+            tableLayoutApply.ColumnCount = 4;
+            tableLayoutApply.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+            tableLayoutApply.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+            tableLayoutApply.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutApply.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+            tableLayoutApply.Controls.Add(checkLinkFans, 0, 0);
+            tableLayoutApply.Controls.Add(buttonCalibrate, 0, 0);
+            tableLayoutApply.Controls.Add(buttonReset, 0, 0);
+            tableLayoutApply.Controls.Add(checkApplyFans, 3, 0);
+            tableLayoutApply.Dock = DockStyle.Bottom;
+            tableLayoutApply.Location = new Point(0, 37);
+            tableLayoutApply.Name = "tableLayoutApply";
+            tableLayoutApply.Padding = new Padding(10, 0, 10, 10);
+            tableLayoutApply.RowCount = 1;
+            tableLayoutApply.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutApply.Size = new Size(810, 79);
+            tableLayoutApply.TabIndex = 44;
+            //
+            // checkLinkFans
+            //
+            checkLinkFans.AutoSize = true;
+            checkLinkFans.BackColor = SystemColors.ControlLight;
+            checkLinkFans.Dock = DockStyle.Fill;
+            checkLinkFans.Location = new Point(410, 0);
+            checkLinkFans.Margin = new Padding(10, 0, 10, 0);
+            checkLinkFans.Name = "checkLinkFans";
+            checkLinkFans.Padding = new Padding(16, 6, 16, 6);
+            checkLinkFans.Size = new Size(180, 69);
+            checkLinkFans.TabIndex = 45;
+            checkLinkFans.Text = "Link Fans";
+            checkLinkFans.UseVisualStyleBackColor = false;
+            //
             // buttonCalibrate
-            // 
+            //
             buttonCalibrate.Activated = false;
-            buttonCalibrate.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             buttonCalibrate.BackColor = SystemColors.ControlLight;
             buttonCalibrate.Badge = 0;
             buttonCalibrate.BorderColor = Color.Transparent;
             buttonCalibrate.BorderRadius = 2;
+            buttonCalibrate.Dock = DockStyle.Fill;
             buttonCalibrate.FlatStyle = FlatStyle.Flat;
-            buttonCalibrate.Location = new Point(275, 40);
-            buttonCalibrate.Margin = new Padding(4, 2, 4, 2);
+            buttonCalibrate.Location = new Point(210, 0);
+            buttonCalibrate.Margin = new Padding(10, 0, 10, 0);
             buttonCalibrate.Name = "buttonCalibrate";
             buttonCalibrate.Secondary = true;
-            buttonCalibrate.Size = new Size(141, 50);
+            buttonCalibrate.Size = new Size(180, 69);
             buttonCalibrate.TabIndex = 43;
             buttonCalibrate.Text = "Calibrate";
             buttonCalibrate.UseVisualStyleBackColor = false;
-            // 
+            //
             // labelFansResult
-            // 
+            //
             labelFansResult.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             labelFansResult.ForeColor = Color.Red;
             labelFansResult.Location = new Point(18, 2);
@@ -487,37 +522,37 @@ namespace GHelper
             labelFansResult.Size = new Size(771, 32);
             labelFansResult.TabIndex = 42;
             labelFansResult.Visible = false;
-            // 
+            //
             // checkApplyFans
-            // 
-            checkApplyFans.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            //
             checkApplyFans.AutoSize = true;
             checkApplyFans.BackColor = SystemColors.ControlLight;
-            checkApplyFans.Location = new Point(454, 42);
-            checkApplyFans.Margin = new Padding(0);
+            checkApplyFans.Dock = DockStyle.Fill;
+            checkApplyFans.Location = new Point(610, 0);
+            checkApplyFans.Margin = new Padding(10, 0, 10, 0);
             checkApplyFans.Name = "checkApplyFans";
             checkApplyFans.Padding = new Padding(16, 6, 16, 6);
-            checkApplyFans.Size = new Size(341, 48);
+            checkApplyFans.Size = new Size(180, 69);
             checkApplyFans.TabIndex = 19;
-            checkApplyFans.Text = Properties.Strings.ApplyFanCurve;
+            checkApplyFans.Text = "Apply Fan Curve";
             checkApplyFans.UseVisualStyleBackColor = false;
-            // 
+            //
             // buttonReset
-            // 
+            //
             buttonReset.Activated = false;
-            buttonReset.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             buttonReset.BackColor = SystemColors.ControlLight;
             buttonReset.Badge = 0;
             buttonReset.BorderColor = Color.Transparent;
             buttonReset.BorderRadius = 2;
+            buttonReset.Dock = DockStyle.Fill;
             buttonReset.FlatStyle = FlatStyle.Flat;
-            buttonReset.Location = new Point(15, 40);
-            buttonReset.Margin = new Padding(4, 2, 4, 2);
+            buttonReset.Location = new Point(10, 0);
+            buttonReset.Margin = new Padding(0, 0, 10, 0);
             buttonReset.Name = "buttonReset";
             buttonReset.Secondary = true;
-            buttonReset.Size = new Size(252, 50);
+            buttonReset.Size = new Size(180, 69);
             buttonReset.TabIndex = 18;
-            buttonReset.Text = Properties.Strings.FactoryDefaults;
+            buttonReset.Text = "Factory Defaults";
             buttonReset.UseVisualStyleBackColor = false;
             // 
             // comboBoost
@@ -1733,7 +1768,8 @@ namespace GHelper
             tableLayoutModes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picturePerf).EndInit();
             panelApplyFans.ResumeLayout(false);
-            panelApplyFans.PerformLayout();
+            tableLayoutApply.ResumeLayout(false);
+            tableLayoutApply.PerformLayout();
             panelSliders.ResumeLayout(false);
             panelSliders.PerformLayout();
             panelAdvanced.ResumeLayout(false);
@@ -1859,6 +1895,8 @@ namespace GHelper
         private Label labelFansResult;
         private RCheckBox checkApplyFans;
         private RButton buttonReset;
+        private TableLayoutPanel tableLayoutApply;
+        private RCheckBox checkLinkFans;
         private Label labelBoost;
         private RComboBox comboBoost;
         private PictureBox picturePerf;

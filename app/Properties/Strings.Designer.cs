@@ -1090,6 +1090,14 @@ namespace GHelper.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to dGPU exclusive.
+/// <summary>
+        ///   Looks up a localized string similar to Link Fans.
+        /// </summary>
+        public static string LinkFans {
+            get {
+                return ResourceManager.GetString("LinkFans", resourceCulture);
+            }
+        }
         /// </summary>
         internal static string GPUModeUltimate {
             get {

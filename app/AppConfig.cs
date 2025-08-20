@@ -297,6 +297,53 @@ public static class AppConfig
         Set(GgetParamName(device), bitCurve);
     }
 
+    public static int GetFanSpeedForTemp(byte[] curve, int temp)
+    {
+        if (curve.Length != 16) return 0;
+
+        int closestLowerTemp = -1;
+        int closestLowerSpeed = -1;
+
+        int closestHigherTemp = -1;
+        int closestHigherSpeed = -1;
+
+        for (int i = 0; i < 8; i++)
+        {
+            int pointTemp = curve[i];
+            int pointSpeed = curve[i + 8];
+
+            if (pointTemp == temp) return pointSpeed;
+
+            if (pointTemp < temp)
+            {
+                if (closestLowerTemp == -1 || temp - pointTemp < temp - closestLowerTemp)
+                {
+                    closestLowerTemp = pointTemp;
+                    closestLowerSpeed = pointSpeed;
+                }
+            }
+
+            if (pointTemp > temp)
+            {
+                if (closestHigherTemp == -1 || pointTemp - temp < closestHigherTemp - temp)
+                {
+                    closestHigherTemp = pointTemp;
+                    closestHigherSpeed = pointSpeed;
+                }
+            }
+        }
+        
+        if (closestLowerTemp == -1) return closestHigherSpeed;
+        if (closestHigherTemp == -1) return closestLowerSpeed;
+        
+        float tempRange = closestHigherTemp - closestLowerTemp;
+        float speedRange = closestHigherSpeed - closestLowerSpeed;
+        float tempOffset = temp - closestLowerTemp;
+
+        return (int)Math.Round(closestLowerSpeed + (tempOffset / tempRange) * speedRange);
+
+    }
+
 
     public static byte[] StringToBytes(string str)
     {

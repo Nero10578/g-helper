@@ -54,6 +54,8 @@ namespace GHelper
             buttonReset.Text = Properties.Strings.FactoryDefaults;
             checkApplyFans.Text = Properties.Strings.ApplyFanCurve;
 
+            checkLinkFans.Text = Properties.Strings.LinkFans;
+
             labelGPU.Text = Properties.Strings.GPUSettings;
 
             labelGPUCoreTitle.Text = Properties.Strings.GPUCoreClockOffset;
@@ -134,6 +136,7 @@ namespace GHelper
             trackSlow.KeyUp += TrackPower_KeyUp;
 
             checkApplyFans.Click += CheckApplyFans_Click;
+            checkLinkFans.Click += CheckLinkFans_Click;
             checkApplyPower.Click += CheckApplyPower_Click;
 
             trackGPUClockLimit.Minimum = NvidiaGpuControl.MinClockLimit;
@@ -201,7 +204,6 @@ namespace GHelper
             comboModes.TextChanged += ComboModes_TextChanged;
             comboModes.KeyPress += ComboModes_KeyPress;
 
-            Shown += Fans_Shown;
 
             buttonAdd.Click += ButtonAdd_Click;
             buttonRemove.Click += ButtonRemove_Click;
@@ -795,10 +797,6 @@ namespace GHelper
             Left = Program.settingsForm.Left - Width - 5;
         }
 
-        private void Fans_Shown(object? sender, EventArgs e)
-        {
-            FormPosition();
-        }
 
 
         private void TrackPower_MouseUp(object? sender, MouseEventArgs e)
@@ -1066,6 +1064,9 @@ namespace GHelper
             LoadProfile(seriesGPU, AsusFan.GPU);
 
             checkApplyFans.Checked = AppConfig.IsMode("auto_apply");
+            checkLinkFans.Checked = AppConfig.IsMode("link_fans");
+            LinkFans(checkLinkFans.Checked);
+            fanSensorControl.SetFanControl(checkLinkFans.Checked);
 
         }
 
@@ -1136,9 +1137,11 @@ namespace GHelper
 
             checkApplyFans.Checked = false;
             checkApplyPower.Checked = false;
+            checkLinkFans.Checked = false;
 
             AppConfig.SetMode("auto_apply", 0);
             AppConfig.SetMode("auto_apply_power", 0);
+            AppConfig.SetMode("link_fans", 0);
 
             trackUV.Value = RyzenControl.MaxCPUUV;
             trackUViGPU.Value = RyzenControl.MaxIGPUUV;
@@ -1188,6 +1191,11 @@ namespace GHelper
             curPoint = null;
             curIndex = -1;
             labelTip.Visible = false;
+
+            if (checkLinkFans.Checked)
+            {
+                CopyProfile(seriesCPU, seriesGPU);
+            }
 
             SaveProfile(seriesCPU, AsusFan.CPU);
             SaveProfile(seriesGPU, AsusFan.GPU);
@@ -1372,6 +1380,30 @@ namespace GHelper
             }
         }
 
-    }
+        private void CheckLinkFans_Click(object? sender, EventArgs e)
+        {
+            AppConfig.SetMode("link_fans", checkLinkFans.Checked ? 1 : 0);
+            LinkFans(checkLinkFans.Checked);
+            fanSensorControl.SetFanControl(checkLinkFans.Checked);
+        }
 
+        private void LinkFans(bool link)
+        {
+            chartGPU.Visible = !link;
+            if (link)
+            {
+                CopyProfile(seriesCPU, seriesGPU);
+                Chart_Save();
+            }
+        }
+
+        void CopyProfile(Series sourceSeries, Series targetSeries)
+        {
+            targetSeries.Points.Clear();
+            foreach (DataPoint point in sourceSeries.Points)
+            {
+                targetSeries.Points.AddXY(point.XValue, point.YValues[0]);
+            }
+        }
+    }
 }

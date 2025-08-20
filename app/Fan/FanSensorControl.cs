@@ -20,6 +20,7 @@ namespace GHelper.Fan
         static int sameCount = 0;
 
         static System.Timers.Timer timer = default!;
+        static System.Timers.Timer linkedTimer = default!;
 
         static int[] _fanMax = InitFanMax();
         static bool _fanRpm = AppConfig.IsNotFalse("fan_rpm");
@@ -29,6 +30,46 @@ namespace GHelper.Fan
             this.fansForm = fansForm;
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += Timer_Elapsed;
+
+            linkedTimer = new System.Timers.Timer(3000);
+            linkedTimer.Elapsed += LinkedTimer_Elapsed;
+
+        }
+
+        public void SetFanControl(bool linked)
+        {
+            if (linked)
+            {
+                Program.acpi.DeviceSet(AsusACPI.PerformanceMode, AsusACPI.PerformanceManual, "ManualFan");
+                linkedTimer.Enabled = true;
+            }
+            else
+            {
+                linkedTimer.Enabled = false;
+                modeControl.AutoFans(true);
+            }
+        }
+
+
+        private void LinkedTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            byte[] fanConfig = AppConfig.GetFanConfig(AsusFan.CPU);
+            int temp = (int)Math.Round(HardwareControl.GetCPUTemp() ?? 0);
+
+            if (temp <= 0) return;
+
+            int fanSpeed = AppConfig.GetFanSpeedForTemp(fanConfig, temp);
+
+            byte[] curve = new byte[16];
+            for (int i = 0; i < 8; i++)
+            {
+                curve[i] = (byte)(30 + i * 10);
+                curve[i + 8] = (byte)fanSpeed;
+            }
+
+            Program.acpi.SetFanCurve(AsusFan.CPU, curve);
+            Program.acpi.SetFanCurve(AsusFan.GPU, curve);
+
         }
 
         static int[] InitFanMax()

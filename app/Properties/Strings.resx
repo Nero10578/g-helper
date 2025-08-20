@@ -163,7 +163,7 @@
     <value>Apply</value>
   </data>
   <data name="ApplyFanCurve" xml:space="preserve">
-    <value>Apply Custom Fan Curve</value>
+    <value>Apply Custom Curve</value>
   </data>
   <data name="ApplyPowerLimits" xml:space="preserve">
     <value>Apply Power Limits</value>
@@ -880,5 +880,8 @@ Do you still want to continue?</value>
   </data>
   <data name="AmbientModeResources" xml:space="preserve">
     <value>Ambient mode may increase resource usage</value>
+  </data>
+  <data name="LinkFans" xml:space="preserve">
+    <value>Link Fans</value>
   </data>
 </root>
