@@ -1190,11 +1190,6 @@ namespace GHelper
             curIndex = -1;
             labelTip.Visible = false;
 
-            if (checkLinkFans.Checked)
-            {
-                CopyProfile(seriesCPU, seriesGPU);
-            }
-
             SaveProfile(seriesCPU, AsusFan.CPU);
             SaveProfile(seriesGPU, AsusFan.GPU);
 
@@ -1387,10 +1382,8 @@ namespace GHelper
 
         private void LinkFans(bool link)
         {
-            chartGPU.Visible = !link;
             if (link)
             {
-                CopyProfile(seriesCPU, seriesGPU);
                 Chart_Save();
             }
         }

@@ -52,12 +52,17 @@ namespace GHelper.Fan
 
         private void LinkedTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            byte[] fanConfig = AppConfig.GetFanConfig(AsusFan.CPU);
-            int temp = (int)Math.Round(HardwareControl.GetCPUTemp() ?? 0);
+            byte[] fanConfigCPU = AppConfig.GetFanConfig(AsusFan.CPU);
+            int tempCPU = (int)Math.Round(HardwareControl.GetCPUTemp() ?? 0);
+            int fanSpeedCPU = (tempCPU > 0) ? AppConfig.GetFanSpeedForTemp(fanConfigCPU, tempCPU) : 0;
 
-            if (temp <= 0) return;
+            byte[] fanConfigGPU = AppConfig.GetFanConfig(AsusFan.GPU);
+            int tempGPU = (int)Math.Round(HardwareControl.GetGPUTemp() ?? 0);
+            int fanSpeedGPU = (tempGPU > 0) ? AppConfig.GetFanSpeedForTemp(fanConfigGPU, tempGPU) : 0;
 
-            int fanSpeed = AppConfig.GetFanSpeedForTemp(fanConfig, temp);
+            int fanSpeed = Math.Max(fanSpeedCPU, fanSpeedGPU);
+
+            if (fanSpeed == 0) return;
 
             byte[] curve = new byte[16];
             for (int i = 0; i < 8; i++)
@@ -65,10 +70,10 @@ namespace GHelper.Fan
                 curve[i] = (byte)(30 + i * 10);
                 curve[i + 8] = (byte)fanSpeed;
             }
-
+ 
             Program.acpi.SetFanCurve(AsusFan.CPU, curve);
             Program.acpi.SetFanCurve(AsusFan.GPU, curve);
-
+ 
         }
 
         static int[] InitFanMax()
