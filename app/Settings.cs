@@ -1679,7 +1679,7 @@ namespace GHelper
 
         public void InitFans()
         {
-            if (fansForm is null)
+            if (fansForm is null || fansForm.IsDisposed)
             {
                 fansForm = new Fans();
                 AddOwnedForm(fansForm);

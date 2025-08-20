@@ -735,6 +735,7 @@ namespace GHelper
 
         void SetChart(Chart chart, AsusFan device)
         {
+            if (chart is null) return;
 
             string title = "";
             string scale = ", RPM/°C";
