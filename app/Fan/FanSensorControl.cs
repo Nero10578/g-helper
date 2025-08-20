@@ -53,12 +53,28 @@ namespace GHelper.Fan
 
         private void LinkedTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            byte[] fanConfig = AppConfig.GetFanConfig(AsusFan.CPU);
-            int temp = (int)Math.Round(HardwareControl.GetCPUTemp() ?? 0);
+            // Get both CPU and GPU temperatures
+            int cpuTemp = (int)Math.Round(HardwareControl.GetCPUTemp() ?? 0);
+            int gpuTemp = (int)Math.Round(HardwareControl.GetGPUTemp() ?? 0);
 
-            if (temp <= 0) return;
+            if (cpuTemp <= 0 && gpuTemp <= 0) return;
 
-            int fanSpeed = AppConfig.GetFanSpeedForTemp(fanConfig, temp);
+            // Get both CPU and GPU fan curves
+            byte[] cpuFanConfig = AppConfig.GetFanConfig(AsusFan.CPU);
+            byte[] gpuFanConfig = AppConfig.GetFanConfig(AsusFan.GPU);
+
+            // Calculate fan speeds from both curves
+            int cpuFanSpeed = 0;
+            int gpuFanSpeed = 0;
+
+            if (cpuTemp > 0)
+                cpuFanSpeed = AppConfig.GetFanSpeedForTemp(cpuFanConfig, cpuTemp);
+
+            if (gpuTemp > 0)
+                gpuFanSpeed = AppConfig.GetFanSpeedForTemp(gpuFanConfig, gpuTemp);
+
+            // Use the higher of the two fan speeds
+            int fanSpeed = Math.Max(cpuFanSpeed, gpuFanSpeed);
 
             byte[] curve = new byte[16];
             for (int i = 0; i < 8; i++)
