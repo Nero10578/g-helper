@@ -1679,8 +1679,12 @@ namespace GHelper
 
         public void InitFans()
         {
-            if (fansForm is not null)
-                fansForm.InitFans();
+            if (fansForm is null)
+            {
+                fansForm = new Fans();
+                AddOwnedForm(fansForm);
+            }
+            fansForm.InitFans();
         }
 
         public void VisualiseGPUMode(int GPUMode = -1)
