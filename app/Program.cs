@@ -259,7 +259,8 @@ namespace GHelper
             inputDispatcher.Init();
 
             modeControl.AutoPerformance(powerChanged);
-            settingsForm.InitFans();
+            if (settingsForm.fansForm is not null)
+                settingsForm.InitFans();
             fanControl.SetFanControl(AppConfig.IsMode("link_fans"));
 
             settingsForm.matrixControl.SetDevice(true);
