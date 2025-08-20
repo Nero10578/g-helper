@@ -165,16 +165,6 @@ namespace GHelper.Mode
         {
             customFans = false;
 
-            // Check if linked fan control is enabled and start/stop it accordingly
-            if (AppConfig.IsMode("link_fans"))
-            {
-                settings.fansForm?.SetFanControl(true);
-            }
-            else
-            {
-                settings.fansForm?.SetFanControl(false);
-            }
-
             if (AppConfig.IsMode("auto_apply") || force)
             {
 

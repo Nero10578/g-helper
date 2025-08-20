@@ -1192,8 +1192,10 @@ namespace GHelper
             curIndex = -1;
             labelTip.Visible = false;
 
-            // Don't copy CPU curve to GPU curve anymore when Link Fans is enabled
-            // Both curves are now used independently to determine max fan speed
+            if (checkLinkFans.Checked)
+            {
+                CopyProfile(seriesCPU, seriesGPU);
+            }
 
             SaveProfile(seriesCPU, AsusFan.CPU);
             SaveProfile(seriesGPU, AsusFan.GPU);
@@ -1387,16 +1389,12 @@ namespace GHelper
 
         private void LinkFans(bool link)
         {
-            // Keep both charts visible since we now use both CPU and GPU fan curves
-            // to determine the maximum fan speed in linked mode
-            chartGPU.Visible = true;
-            // Don't automatically copy CPU curve to GPU curve anymore
-            // Both curves are now used independently to determine max fan speed
-        }
-
-        public void SetFanControl(bool enabled)
-        {
-            fanSensorControl.SetFanControl(enabled);
+            chartGPU.Visible = !link;
+            if (link)
+            {
+                CopyProfile(seriesCPU, seriesGPU);
+                Chart_Save();
+            }
         }
 
         void CopyProfile(Series sourceSeries, Series targetSeries)
